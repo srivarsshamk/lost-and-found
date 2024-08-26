@@ -1,0 +1,21 @@
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v3.4.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+
+  - repo: https://github.com/dart-lang/pre_commit_hooks
+    rev: v1.0.0
+    hooks:
+      - id: dartfmt
+        name: Format Dart code
+        entry: dart format .
+        language: system
+        types: [dart]
+
+      - id: dartanalyzer
+        name: Dart Analyze
+        entry: dart analyze
+        language: system
+        types: [dart]
