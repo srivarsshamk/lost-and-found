@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'src/screens/post_provider.dart'; // Remove 'lib/' from the path
-import 'src/screens/search_page.dart'; // Remove 'lib/' from the path
-import 'src/screens/edit_profile_page.dart'; // Import EditProfilePage
+import 'src/screens/post_provider.dart';
+import 'src/screens/search_page.dart';
+import 'src/screens/edit_profile_page.dart';
+import 'src/screens/upload_lost_item_page.dart'; // Import UploadLostItemPage
 
 void main() {
   runApp(
@@ -36,25 +37,16 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int _selectedIndex = 1; // Set 'Feed' as the default selected index
 
+  final List<Widget> _pages = [
+    UploadLostItemPage(), // Upload page
+    SearchPage(), // Feed page content
+    EditProfilePage(), // Profile page
+  ];
+
   void _onBottomNavTap(int index) {
     setState(() {
       _selectedIndex = index;
     });
-
-    // Navigate based on the selected index
-    if (index == 0) {
-      // Handle upload action
-      print('Upload selected');
-    } else if (index == 1) {
-      // Currently on the feed page
-      print('Feed selected');
-    } else if (index == 2) {
-      // Navigate to the profile page
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => EditProfilePage()),
-      );
-    }
   }
 
   @override
@@ -91,24 +83,30 @@ class _HomePageState extends State<HomePage> {
               leading: Icon(Icons.upload),
               title: Text('Upload'),
               onTap: () {
-                // Handle upload action here
+                setState(() {
+                  _selectedIndex = 0; // Navigate to Upload page
+                });
+                Navigator.pop(context); // Close the drawer
               },
             ),
             ListTile(
               leading: Icon(Icons.feed),
               title: Text('Feed'),
               onTap: () {
-                // Handle feed action here
+                setState(() {
+                  _selectedIndex = 1; // Navigate to Feed page
+                });
+                Navigator.pop(context); // Close the drawer
               },
             ),
             ListTile(
               leading: Icon(Icons.person),
               title: Text('Edit Profile'),
               onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => EditProfilePage()),
-                );
+                setState(() {
+                  _selectedIndex = 2; // Navigate to Profile page
+                });
+                Navigator.pop(context); // Close the drawer
               },
             ),
           ],
@@ -116,14 +114,10 @@ class _HomePageState extends State<HomePage> {
       ),
       body: IndexedStack(
         index: _selectedIndex,
-        children: [
-          Container(), // Placeholder for Upload page
-          SearchPage(), // Feed page content
-          Container(), // Placeholder for Profile page
-        ],
+        children: _pages,
       ),
       bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _selectedIndex, // This will highlight the selected icon
+        currentIndex: _selectedIndex, // Highlight the selected icon
         onTap: _onBottomNavTap,
         backgroundColor: Colors.purple,
         selectedItemColor: Colors.white,
